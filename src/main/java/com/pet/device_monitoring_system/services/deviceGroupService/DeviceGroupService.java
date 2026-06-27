@@ -16,7 +16,7 @@ public interface DeviceGroupService {
 
     DeviceGroupDto updateGroup(UUID id, DeviceGroupDto deviceGroupDto);
 
-    DeviceGroupDto deleteGroup(UUID id);
+    void deleteGroup(UUID id);
 
 
 }
