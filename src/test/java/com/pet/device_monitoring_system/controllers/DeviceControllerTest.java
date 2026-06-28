@@ -46,13 +46,11 @@ class DeviceControllerTest {
 
     @Test
     void createDevice_whenRequestIsValid_shouldReturnCreatedDevice() throws Exception {
-        // given
         DeviceDto request = createDeviceDto("ATM-001", "192.168.1.10", StatusType.UNKNOWN);
         DeviceDto response = createDeviceDto("ATM-001", "192.168.1.10", StatusType.UNKNOWN);
 
         when(deviceService.createDevice(any(DeviceDto.class))).thenReturn(response);
 
-        // when + then
         mockMvc.perform(post("/api/devices")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -68,13 +66,11 @@ class DeviceControllerTest {
 
     @Test
     void getDeviceById_whenDeviceExists_shouldReturnDevice() throws Exception {
-        // given
         UUID id = UUID.randomUUID();
         DeviceDto response = createDeviceDto("ATM-001", "192.168.1.10", StatusType.GOOD);
 
         when(deviceService.findDeviceById(id)).thenReturn(response);
 
-        // when + then
         mockMvc.perform(get("/api/devices/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("ATM-001"))
@@ -86,13 +82,11 @@ class DeviceControllerTest {
 
     @Test
     void getAllDevice_whenDevicesExist_shouldReturnDevicesList() throws Exception {
-        // given
         DeviceDto device1 = createDeviceDto("ATM-001", "192.168.1.10", StatusType.GOOD);
         DeviceDto device2 = createDeviceDto("ATM-002", "192.168.1.11", StatusType.BAD);
 
         when(deviceService.findAllDevices()).thenReturn(List.of(device1, device2));
 
-        // when + then
         mockMvc.perform(get("/api/devices"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("ATM-001"))
@@ -115,7 +109,6 @@ class DeviceControllerTest {
 
         when(deviceService.findDevicesByGroupId(groupId)).thenReturn(List.of(device1, device2));
 
-        // when + then
         mockMvc.perform(get("/api/devices/group/{id}", groupId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("ATM-001"))
@@ -128,13 +121,11 @@ class DeviceControllerTest {
 
     @Test
     void getAllDeviceByStatus_whenDevicesExist_shouldReturnDevicesList() throws Exception {
-        // given
         DeviceDto device1 = createDeviceDto("ATM-001", "192.168.1.10", StatusType.BAD);
         DeviceDto device2 = createDeviceDto("ATM-002", "192.168.1.11", StatusType.BAD);
 
         when(deviceService.findDevicesByStatus(StatusType.BAD)).thenReturn(List.of(device1, device2));
 
-        // when + then
         mockMvc.perform(get("/api/devices/status/{status}", StatusType.BAD))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("ATM-001"))
@@ -147,14 +138,12 @@ class DeviceControllerTest {
 
     @Test
     void updateDevice_whenRequestIsValid_shouldReturnUpdatedDevice() throws Exception {
-        // given
         UUID id = UUID.randomUUID();
 
         DeviceDto request = createDeviceDto("ATM-UPDATED", "10.0.0.5", StatusType.GOOD);
         DeviceDto response = createDeviceDto("ATM-UPDATED", "10.0.0.5", StatusType.GOOD);
 
         when(deviceService.updateDevice(eq(id), any(DeviceDto.class))).thenReturn(response);
-        // when + then
         mockMvc.perform(put("/api/devices/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -163,14 +152,13 @@ class DeviceControllerTest {
                 .andExpect(jsonPath("$.ipAddress").value("10.0.0.5"))
                 .andExpect(jsonPath("$.status").value("GOOD"));
 
-        verify(deviceService).updateDevice(eq(id), any(DeviceDto.class));    }
+        verify(deviceService).updateDevice(eq(id), any(DeviceDto.class));
+    }
 
     @Test
     void deleteDevice_whenDeviceExists_shouldReturnOk() throws Exception {
-        // given
         UUID id = UUID.randomUUID();
 
-        // when + then
         mockMvc.perform(delete("/api/devices/{id}", id))
                 .andExpect(status().isOk());
 
@@ -179,14 +167,12 @@ class DeviceControllerTest {
 
     @Test
     void updateDeviceStatus_whenRequestIsValid_shouldReturnUpdatedDevice() throws Exception {
-        // given
         UUID id = UUID.randomUUID();
 
         DeviceDto response = createDeviceDto("ATM-001", "192.168.1.10", StatusType.BAD);
 
         when(deviceService.changeDeviceStatus(id, StatusType.BAD)).thenReturn(response);
 
-        // when + then
         mockMvc.perform(patch("/api/devices/{id}/status", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(StatusType.BAD)))
