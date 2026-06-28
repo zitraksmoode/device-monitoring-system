@@ -9,6 +9,6 @@ public record DeviceDto(
         String ipAddress,
         DeviceGroup group,
         Boolean isActive,
-        DeviceType device,
+        DeviceType deviceType,
         StatusType status) {
 }
